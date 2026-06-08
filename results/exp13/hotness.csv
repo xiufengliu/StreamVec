@@ -1,0 +1,4 @@
+unit_id,policy,hot_recall,uniform_recall
+hot_priority,priority,0.9513,0.9383
+hot_hotness,hotness,0.9587,0.937
+hot_norepair,norepair,0.96,0.9343

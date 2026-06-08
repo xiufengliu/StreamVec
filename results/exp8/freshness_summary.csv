@@ -1,0 +1,8 @@
+unit_id,system,R,time_avg_recall,min_recall,amortized_maint_ms_per_op,rebuilds
+streamvec,StreamVec,0,0.9865,0.9773,2.6747,0
+rebuild_R1000,HNSW-Rebuild,1000,0.9517,0.8773,0.1931,14
+rebuild_R2000,HNSW-Rebuild,2000,0.8911,0.7677,0.1309,8
+rebuild_R4000,HNSW-Rebuild,4000,0.8011,0.606,0.1007,5
+rebuild_R8000,HNSW-Rebuild,8000,0.6855,0.4063,0.0798,3
+norepair,StreamVec-NoRepair,0,0.9856,0.9753,1.8459,0
+append,HNSW-Append,0,0.9824,0.9753,0.2562,0

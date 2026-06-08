@@ -1,0 +1,11 @@
+unit_id,M,variant,system,final_recall,query_qps,update_throughput_ops_s,tombstone_ratio
+M6_repair,6,repair,StreamVec,0.9465,4585.3,1042.8,0.5329
+M6_norepair,6,norepair,StreamVec-NoRepair,0.9047,4680.1,1449.3,0.5329
+M8_repair,8,repair,StreamVec,0.966,4350.2,785.9,0.5329
+M8_norepair,8,norepair,StreamVec-NoRepair,0.929,4544.1,1246.9,0.5329
+M12_repair,12,repair,StreamVec,0.9817,3890.5,496.1,0.5329
+M12_norepair,12,norepair,StreamVec-NoRepair,0.9595,4097.5,893.2,0.5329
+M16_repair,16,repair,StreamVec,0.9825,3827.8,361.3,0.5329
+M16_norepair,16,norepair,StreamVec-NoRepair,0.9715,3658.9,687.8,0.5329
+M24_repair,24,repair,StreamVec,0.9882,3248.1,215.8,0.5329
+M24_norepair,24,norepair,StreamVec-NoRepair,0.9762,3344.0,450.1,0.5329

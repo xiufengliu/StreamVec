@@ -1,0 +1,11 @@
+kind,system,step,recall_at_10,ndcg_at_10
+streamvec,StreamVec,2000,0.9665,0.9775
+streamvec,StreamVec,4000,0.9718,0.9818
+streamvec,StreamVec,6000,0.9633,0.9762
+streamvec,StreamVec,8000,0.9625,0.9757
+streamvec,StreamVec,10000,0.9688,0.9799
+hnsw_rebuild,HNSW-Rebuild,2000,0.945,0.9643
+hnsw_rebuild,HNSW-Rebuild,4000,0.943,0.9629
+hnsw_rebuild,HNSW-Rebuild,6000,0.9403,0.961
+hnsw_rebuild,HNSW-Rebuild,8000,0.945,0.9643
+hnsw_rebuild,HNSW-Rebuild,10000,0.9457,0.9649

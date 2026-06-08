@@ -1,0 +1,54 @@
+# ---- OS / editor ----
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# ---- Datasets (too large for git; regenerate via experiments/prepare_data.py) ----
+data/
+
+# ---- Third-party reference PDFs (not redistributable) ----
+example_papers/
+
+# ---- Manuscript and internal planning docs (not for public disclosure) ----
+paper/
+REPORT.md
+PLAN.md
+blueprint.md
+
+# ---- Run logs ----
+logs/
+
+# ---- Compiled C++ artifacts ----
+cpp/bench
+cpp/*.o
+cpp/*.out
+*.dSYM/
+
+# ---- LaTeX build artifacts (keep main.tex, refs.bib, *.cls/.sty/.bst, main.pdf) ----
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.toc
+paper/*.lof
+paper/*.lot
+paper/*.nav
+paper/*.snm
+paper/*.vrb

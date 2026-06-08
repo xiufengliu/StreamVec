@@ -1,0 +1,5 @@
+mix,insert_ratio,delete_ratio,update_ratio,final_recall,query_qps,update_throughput_ops_s,tombstone_ratio,repair_count
+insert-heavy,0.7,0.15,0.15,0.9433,3298.2,638.4,0.2005,5238
+balanced,0.34,0.33,0.33,0.951,3562.3,681.7,0.4416,7675
+delete-heavy,0.3,0.5,0.2,0.9635,3655.2,779.3,0.5794,8229
+update-heavy,0.3,0.2,0.5,0.9415,3214.8,624.4,0.3752,7496

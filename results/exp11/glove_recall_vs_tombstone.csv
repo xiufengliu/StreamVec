@@ -1,0 +1,16 @@
+kind,system,tombstone_ratio,recall_at_10,query_qps
+streamvec,StreamVec,0.0,0.7635,2688.5
+streamvec,StreamVec,0.1,0.7465,2737.9
+streamvec,StreamVec,0.2,0.732,2915.0
+streamvec,StreamVec,0.3,0.7073,2911.0
+streamvec,StreamVec,0.4,0.7105,2960.8
+streamvec_norepair,StreamVec-NoRepair,0.0,0.7635,2774.1
+streamvec_norepair,StreamVec-NoRepair,0.1,0.7428,2692.7
+streamvec_norepair,StreamVec-NoRepair,0.2,0.729,2893.9
+streamvec_norepair,StreamVec-NoRepair,0.3,0.7035,2832.8
+streamvec_norepair,StreamVec-NoRepair,0.4,0.7075,2846.0
+hnsw_append,HNSW-Append,0.0,0.69,33947.0
+hnsw_append,HNSW-Append,0.1,0.6993,31418.8
+hnsw_append,HNSW-Append,0.2,0.7135,28626.3
+hnsw_append,HNSW-Append,0.3,0.7278,26572.6
+hnsw_append,HNSW-Append,0.4,0.7412,24112.5
