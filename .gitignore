@@ -19,15 +19,6 @@ env/
 # ---- Datasets (too large for git; regenerate via experiments/prepare_data.py) ----
 data/
 
-# ---- Third-party reference PDFs (not redistributable) ----
-example_papers/
-
-# ---- Manuscript and internal planning docs (not for public disclosure) ----
-paper/
-REPORT.md
-PLAN.md
-blueprint.md
-
 # ---- Run logs ----
 logs/
 
@@ -36,22 +27,6 @@ cpp/bench
 cpp/*.o
 cpp/*.out
 *.dSYM/
-
-# ---- LaTeX build artifacts (keep main.tex, refs.bib, *.cls/.sty/.bst, main.pdf) ----
-paper/*.aux
-paper/*.bbl
-paper/*.blg
-paper/*.fdb_latexmk
-paper/*.fls
-paper/*.log
-paper/*.out
-paper/*.synctex.gz
-paper/*.toc
-paper/*.lof
-paper/*.lot
-paper/*.nav
-paper/*.snm
-paper/*.vrb
 
 # ---- Scratch / local-only ----
 .tmpbuild/
@@ -63,7 +38,3 @@ results_cpp/e2e_v2.csv
 tests/cpp/trace_check
 trace_check
 tables/
-figures/prompts/
-figures/fig1_freshness*
-figures/fig2_overview*
-experiments/verify_claims.py
