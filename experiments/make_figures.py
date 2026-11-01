@@ -1,4 +1,4 @@
-"""Generate paper-ready figures (PDF + PNG) and LaTeX tables from results CSVs.
+"""Generate figures (PDF + PNG) and LaTeX tables from results CSVs.
 
 Reads only real result files under results/; never fabricates. Any missing
 experiment is skipped with a warning so partial runs still produce what exists.
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(HERE, "results")
 FIG = os.path.join(HERE, "figures")
-TAB = os.path.join(HERE, "paper", "tables")
+TAB = os.path.join(HERE, "tables")
 os.makedirs(FIG, exist_ok=True)
 os.makedirs(TAB, exist_ok=True)
 

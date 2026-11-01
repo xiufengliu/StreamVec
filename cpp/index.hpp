@@ -8,8 +8,8 @@ namespace streamvec {
 struct Params {
   int dim, M = 16, efc = 100, ef_repair = 64;
   double tomb_threshold = 0.15, deg_deficit_threshold = 0.3, prune_fraction = 0.5;
-  int repair_radius = 2;       // beam-search seed hops (Q6)
-  double hotness_alpha = 0.0;  // >0 enables query-driven priority (Q12)
+  int repair_radius = 2;       // beam-search seed hops
+  double hotness_alpha = 0.0;  // >0 enables query-driven priority
   int dirty_policy = 0;        // DirtySet::Policy
   bool skip_tombstones = true; // false => route-through (append baseline)
   uint64_t seed = 42;
@@ -22,6 +22,9 @@ struct StreamVecIndex {
   std::unordered_map<idx_t, std::vector<float>> orig;  // external id -> vector (for rebuild)
   std::unordered_map<idx_t, long> visits;
   bool no_repair = false;
+  bool track_dirty = true;           // false => skip DirtySet bookkeeping (consolidation baseline)
+  long forced_repairs = 0, sched_repairs = 0;
+  std::function<void(StreamVecIndex&)> compactor;  // if set, the trigger compacts instead of fully rebuilding
   bool reuse_slots = false;          // replace_deleted: recycle tombstoned slots
   std::vector<idx_t> freelist;
   std::mt19937 rng;
@@ -90,7 +93,7 @@ struct StreamVecIndex {
       // tombstone-pruning: force-repair badly damaged nodes
       if (!no_repair && !g.nbr[u].empty() && !g.nbr[u][0].empty()) {
         int dead = 0; for (idx_t x : g.nbr[u][0]) if (g.tomb[x]) dead++;
-        if ((double)dead / g.nbr[u][0].size() >= p.prune_fraction) { repair_node(u); dirty.remove(u); }
+        if ((double)dead / g.nbr[u][0].size() >= p.prune_fraction) { repair_node(u); dirty.remove(u); forced_repairs++; }
       }
     }
   }
@@ -106,15 +109,16 @@ struct StreamVecIndex {
     idx_t in = it->second; if (g.tomb[in]) return;
     g.tomb[in] = 1;
     if (in == g.ep) replace_entry_point();
+    dirty.remove(in);                          // a tombstoned node is never repaired
     if (reuse_slots) freelist.push_back(in);
-    else mark_neighbors_dirty(in);
-    ext2int.erase(it);
+    else if (track_dirty) mark_neighbors_dirty(in);
+    ext2int.erase(it); orig.erase(ext);
   }
 
   void update(idx_t ext, const float* v) {
     auto it = ext2int.find(ext);
-    if (it != ext2int.end()) { idx_t old = it->second; g.tomb[old] = 1;
-      if (old == g.ep) replace_entry_point(); mark_neighbors_dirty(old); ext2int.erase(it); }
+    if (it != ext2int.end()) { idx_t old = it->second; g.tomb[old] = 1; dirty.remove(old);
+      if (old == g.ep) replace_entry_point(); if (track_dirty) mark_neighbors_dirty(old); ext2int.erase(it); }
     idx_t in = g.insert(v); set_ext(in, ext); orig[ext].assign(v, v + p.dim);
   }
 
@@ -126,7 +130,7 @@ struct StreamVecIndex {
       int mmax = layer == 0 ? g.M0 : g.M;
       auto& l = g.nbr[u][layer];
       std::vector<idx_t> live; for (idx_t x : l) if (!g.tomb[x]) live.push_back(x);
-      if ((int)live.size() >= mmax) { l = live; continue; }
+      if ((int)live.size() >= mmax) { g.lock_node(u); l = live; g.unlock_node(u); continue; }
       std::unordered_set<idx_t> seeds(live.begin(), live.end());
       if (p.repair_radius >= 2)
         for (idx_t ln : live) if (layer < (int)g.nbr[ln].size())
@@ -140,7 +144,7 @@ struct StreamVecIndex {
       for (idx_t x : live) { pool.push_back({l2sqr(q, g.vptr(x), p.dim), x}); have.insert(x); }
       for (auto& [d, c] : cand) if (c != u && !have.count(c)) { have.insert(c); pool.push_back({d, c}); }
       auto chosen = g.select_heuristic(u, pool, mmax);
-      g.nbr[u][layer] = chosen;
+      g.lock_node(u); g.nbr[u][layer] = chosen; g.unlock_node(u);
       for (idx_t nb : chosen) { if (nb == u) continue;
         if (layer <= g.level[nb]) { g.connect(nb, u, layer); g.prune(nb, layer); } }
     }
@@ -152,6 +156,7 @@ struct StreamVecIndex {
     if (budget < 0) budget = dirty.size();
     auto nodes = dirty.pop(budget);
     for (idx_t u : nodes) repair_node(u);
+    sched_repairs += nodes.size();
     return nodes.size();
   }
 
@@ -163,6 +168,15 @@ struct StreamVecIndex {
     if (dirty.avg_deficit() > p.deg_deficit_threshold * g.M0) return true;
     return false;
   }
+  // fraction of damaged live nodes (>=1 tombstoned level-0 neighbour) that are in the DirtySet
+  double dirty_coverage(long* damaged_out = nullptr) {
+    long dam = 0, cov = 0;
+    for (int i = 0; i < g.n; ++i) { if (g.tomb[i] || g.nbr[i].empty()) continue;
+      bool d = false; for (idx_t x : g.nbr[i][0]) if (g.tomb[x]) { d = true; break; }
+      if (d) { dam++; if (dirty.mem.count(i)) cov++; } }
+    if (damaged_out) *damaged_out = dam;
+    return dam ? (double)cov / dam : 1.0;
+  }
   int nlive_count() { int c = 0; for (int i = 0; i < g.n; ++i) if (!g.tomb[i]) c++; return c; }
 
   void rebuild() {
@@ -173,7 +187,7 @@ struct StreamVecIndex {
     HNSWGraph ng(p.dim, p.M, p.efc, p.seed);
     DirtySet nd; nd.policy = dirty.policy;
     g = std::move(ng); dirty = std::move(nd);
-    ext2int.clear(); int2ext.clear();
+    ext2int.clear(); int2ext.clear(); freelist.clear();
     std::unordered_map<idx_t, std::vector<float>> norig;
     g.reserve(N + 16);
     for (int i = 0; i < N; ++i) {
@@ -228,9 +242,11 @@ struct StreamVecIndex {
       auto& v = orig[kv.first]; mat.insert(mat.end(), v.begin(), v.end()); }
   }
   size_t memory_bytes() {
-    size_t b = (size_t)g.n * p.dim * 4;            // stored vectors
+    // index memory: vector slots (live + tombstoned) + adjacency lists.
+    // The ext->vector map 'orig' is a harness convenience that every system
+    // could replace by reading live slots, so it is not charged to any system.
+    size_t b = (size_t)g.n * p.dim * 4;
     for (auto& nn : g.nbr) for (auto& l : nn) b += l.size() * 4;
-    b += orig.size() * (size_t)p.dim * 4;          // retained originals
     return b;
   }
 };

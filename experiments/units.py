@@ -7,7 +7,7 @@ many pending units as fit in a wall-clock budget, appends them to the
 experiment's CSV, and exits; re-invoking resumes with the remaining units.
 
 Scales are deliberately modest to fit the sandbox (4 cores / 3.8 GB, pure-Python
-index); they are reported honestly in the paper.  Determinism: every unit
+index); they are reported as measured.  Determinism: every unit
 regenerates the same seeded stream, so partial runs are reproducible.
 """
 from __future__ import annotations
@@ -129,7 +129,7 @@ def _exp2_cfg():
     # M=8 (sparse, memory-lean HNSW setting) + low ef operating point: the
     # regime where the live graph is sensitive to fragmentation, so repair is
     # measurable.  At M=16 HNSW edge redundancy makes recall churn-robust
-    # regardless (reported as a scope finding in the paper).
+    # regardless (reported as a scope finding).
     return ExperimentConfig(name="exp2", dataset="sift", n_base=7000, n_query=400, metric="l2",
                             M=8, ef_construction=80, k=10, ef_search=20,
                             repair_policy="priority", repair_budget=16, ef_repair=48, seed=42)

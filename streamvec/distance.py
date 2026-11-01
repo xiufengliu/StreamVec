@@ -1,7 +1,7 @@
 """Distance computation for StreamVec.
 
 Vectorized NumPy implementations of L2, cosine, and inner-product distances.
-The blueprint specifies SIMD/AVX2 distance kernels in C++; in this Python
+A production build would use SIMD/AVX2 distance kernels in C++; in this Python
 reference we rely on NumPy's BLAS-backed batch operations, which is the
 idiomatic vectorized equivalent. All distances are *smaller-is-closer* so the
 same greedy-search and neighbor-selection logic works for every metric.

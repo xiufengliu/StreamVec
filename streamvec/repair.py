@@ -6,7 +6,7 @@ replacement candidates, (3) applies HNSW heuristic neighbor selection to refill
 ``u``'s neighbor list up to the per-layer target degree, and (4) adds reverse
 edges.  Seeding the beam search from ``u``'s own neighbors (rather than the
 global entry point) is the "reuse candidates across nearby dirty nodes"
-amortization from the blueprint -- it keeps each repair localized and cheap.
+amortization -- it keeps each repair localized and cheap.
 """
 from __future__ import annotations
 

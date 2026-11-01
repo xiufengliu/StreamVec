@@ -1,4 +1,4 @@
-"""Mixed-operation stream workload generator (blueprint Part 4.2 / Prompt 3)."""
+"""Mixed-operation stream workload generator."""
 from __future__ import annotations
 
 from typing import List, Optional, Tuple

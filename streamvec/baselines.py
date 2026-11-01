@@ -5,7 +5,7 @@ Every baseline exposes the same streaming API as StreamVecIndex:
 ``maybe_maintain(op_count)`` (called once per stream op so periodic-rebuild
 baselines can rebuild on schedule), and ``live_vectors()``.
 
-Baselines (from blueprint Part 4.3 and the related-work survey):
+Baselines:
   * HNSWAppend       -- hnswlib insert + mark_deleted, never repaired/rebuilt.
   * HNSWRebuild      -- buffers ops, full hnswlib rebuild every K ops.
   * FAISSIVFRebuild  -- FAISS IVF, full rebuild every K ops.

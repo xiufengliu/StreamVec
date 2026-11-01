@@ -1,6 +1,6 @@
 """StreamVecIndex: the main streaming ANN index.
 
-Implements the blueprint's core operations -- ``insert``, ``remove`` (lazy
+Implements the core operations -- ``insert``, ``remove`` (lazy
 tombstone), ``update`` (delete + reinsert), ``search`` (tombstone-aware),
 ``repair(budget)`` (priority-guided), ``should_rebuild`` / ``rebuild``
 (adaptive trigger), plus ``get_stats`` and ``estimate_recall``.
@@ -289,7 +289,7 @@ class StreamVecIndex:
 
     def estimate_recall(self, n_probe: int = 100, k: int = 10, ef_search: int = 50) -> float:
         """Cheap internal recall estimate via probe queries against exact kNN
-        over the current live set (used by the adaptive trigger, not for paper
+        over the current live set (used by the adaptive trigger, not for reported
         numbers -- those use the held-out query set)."""
         mat, ids = self.live_vectors()
         if len(ids) <= k:

@@ -12,7 +12,7 @@ Design notes
   maps external ids to rows.  Tombstoned vectors keep their row (lazy deletion).
 * Query traversal *routes through* tombstoned nodes (so graph connectivity is
   preserved) but never returns them in the result set -- this realizes the
-  blueprint's "skip tombstoned nodes ... filter tombstoned nodes from result
+  "skip tombstoned nodes ... filter tombstoned nodes from result
   set" while keeping the live subgraph reachable.  StreamVec's repair restores
   live-to-live edges so the live subgraph stays navigable without leaning on an
   ever-growing tombstone mass.
@@ -120,7 +120,7 @@ class HNSWGraph:
         Returns up to ``ef`` (distance, id) pairs.
 
         ``collect_live_only`` excludes tombstoned nodes from the returned result
-        set.  ``skip_tombstones`` (the blueprint's QUERY semantics) additionally
+        set.  ``skip_tombstones`` (StreamVec's query semantics) additionally
         refuses to *traverse through* tombstoned nodes: their neighbors are never
         expanded, so a tombstoned node cannot serve as a routing waypoint.  Under
         skipping, deletions fragment the live subgraph unless repair restores

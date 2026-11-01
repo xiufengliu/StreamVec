@@ -52,3 +52,18 @@ paper/*.lot
 paper/*.nav
 paper/*.snm
 paper/*.vrb
+
+# ---- Scratch / local-only ----
+.tmpbuild/
+cpp/*.orig
+results_cpp/explore/
+results_cpp/explore60/
+results_cpp/sanity/
+results_cpp/e2e_v2.csv
+tests/cpp/trace_check
+trace_check
+tables/
+figures/prompts/
+figures/fig1_freshness*
+figures/fig2_overview*
+experiments/verify_claims.py

@@ -5,7 +5,7 @@ HNSW-style layered proximity graph maintained under a mixed insert/delete/update
 stream via lazy tombstone deletion, a degree-deficit DirtySet priority queue,
 priority-guided repair, and an adaptive rebuild trigger.
 
-See ``blueprint.md`` and ``PLAN.md`` for the design rationale.
+See ``README.md`` for the design rationale.
 """
 
 from .index import StreamVecIndex, IndexStats
